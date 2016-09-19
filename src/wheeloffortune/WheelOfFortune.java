@@ -20,11 +20,8 @@ public class WheelOfFortune {
       final String case4 = ("Quit");
       final String case5 = ("Test letter input");
       
-      boolean tru = true;
-      boolean fal = false;
+      
       String userLetter;
-      //String atoZ = ".";
-      //char aToz = atoZ.chars();
       
       Scanner in = new Scanner(System.in);
       
