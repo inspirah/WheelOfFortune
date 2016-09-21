@@ -6,9 +6,12 @@
 * ID: azh5318
 */
 package wheeloffortune;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class WheelOfFortune {
+    
 
   /**
    * @param args the command line arguments
@@ -18,19 +21,18 @@ public class WheelOfFortune {
       final String case2 = ("Buy a vowel");
       final String case3 = ("Solve the puzzle");
       final String case4 = ("Quit");
-      final String case5 = ("Test letter input");
+      final String case9 = ("Test letter input");
       
-      
+      displayLogo();
       String userLetter;
-      
       Scanner in = new Scanner(System.in);
       
-      System.out.println("Please select an option!");
       System.out.println("1: Spin the wheel");
       System.out.println("2: Buy a vowel");
       System.out.println("3: Solve the puzzle");
       System.out.println("4: Quit");
-      System.out.println("5: Test letter input");
+      System.out.println("9: Test letter input");
+      System.out.println("Enter a choice:");
       String input = in.nextLine();
       int msg = Integer.valueOf(input);
       
@@ -47,8 +49,8 @@ public class WheelOfFortune {
           case 4: input = case4;
             System.out.println("You've chosen " + case4);
             System.exit(0);
-          case 5: input = case5;
-            System.out.println("You've chosen " + case5);
+          case 9: input = case9;
+            System.out.println("You've chosen " + case9);
             System.out.println("Please enter a letter");
             
             userLetter = in.next().toUpperCase();
@@ -61,8 +63,15 @@ public class WheelOfFortune {
                 }while(!userLetter.matches("[a-zA-Z]"));
                 System.out.println("You've entered: " + userLetter);
             }
+            break;
       } 
     }
+  public static void displayLogo()
+  {
+      System.out.println("                       ======================");
+      System.out.println("                       =  Wheel of Fortune  =");
+      System.out.println("                       ======================");
+  }
 }
     
   
