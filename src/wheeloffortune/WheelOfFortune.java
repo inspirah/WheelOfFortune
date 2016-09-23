@@ -14,6 +14,7 @@ public class WheelOfFortune {
     private final static String solve = ("Solve the puzzle");
     private final static String quit = ("Quit");
     private final static String test = ("Test letter input");
+    private static final Scanner input = new Scanner(System.in);
     private static final List<String> questions = Arrays.asList
         (
             "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
@@ -44,7 +45,6 @@ public class WheelOfFortune {
       displayMenu();
       System.out.println(questions.get(0));
       Random random = new Random();
-      String userLetter;
       Scanner in = new Scanner(System.in);
       String input = in.nextLine();
       int value = Integer.valueOf(input);
@@ -53,13 +53,8 @@ public class WheelOfFortune {
       {
           case 1: input = spin;          
             System.out.println("You've chosen " + spin);
-            System.out.println("You landed on: " + wheelWedges.get(random.nextInt(wheelWedges.size())));
+            //System.out.println("You landed on: " + wheelWedges.get(random.nextInt(wheelWedges.size())));
             System.out.println("Please enter a letter");
-            userLetter = in.next().toUpperCase();
-            if(userLetter.matches(questions.remove(0)))
-            {
-                questions.clear();
-            }
             break;
           case 2: input = buy;
             System.out.println("You've chosen " + buy);
@@ -72,18 +67,7 @@ public class WheelOfFortune {
             System.exit(0);
           case 9: input = test;
             System.out.println("You've chosen " + test);
-            System.out.println("Please enter a letter");
-            
-            userLetter = in.next().toUpperCase();
-            if(userLetter.matches("[a-zA-Z]"))
-                System.out.println("You've entered: " + userLetter);
-            else{
-                do{
-                System.out.println("Invald input, please enter a letter!");
-                userLetter = in.next().toUpperCase();
-                }while(!userLetter.matches("[a-zA-Z]"));
-                System.out.println("You've entered: " + userLetter);
-            }
+            System.out.println("You've entered: " + inputLetter());
           
       }}
       catch(NumberFormatException e)
@@ -113,6 +97,28 @@ public class WheelOfFortune {
       userLetter = "213";
       return userLetter;
       
+  }
+  private static char inputLetter() {
+    char letter = ' ';
+    boolean finished = false;
+
+    while (!finished) {
+      System.out.print("Enter a letter: ");
+
+      String line = input.nextLine();
+      if (line.length() != 1) {
+        System.out.println("Enter just one letter");
+      } else {
+        letter = line.charAt(0);
+        if (!Character.isLetter(letter)) {
+          System.out.println("That is not a letter");
+        } else {
+          finished = true;
+        }
+      }
+    }
+
+    return letter;
   }
 }
     
