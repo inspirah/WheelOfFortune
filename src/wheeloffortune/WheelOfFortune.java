@@ -42,6 +42,7 @@ public class WheelOfFortune {
       {
       try{
       displayMenu();
+      System.out.println(questions.get(0));
       Random random = new Random();
       String userLetter;
       Scanner in = new Scanner(System.in);
@@ -55,6 +56,10 @@ public class WheelOfFortune {
             System.out.println("You landed on: " + wheelWedges.get(random.nextInt(wheelWedges.size())));
             System.out.println("Please enter a letter");
             userLetter = in.next().toUpperCase();
+            if(userLetter.matches(questions.remove(0)))
+            {
+                questions.clear();
+            }
             break;
           case 2: input = buy;
             System.out.println("You've chosen " + buy);
@@ -94,7 +99,7 @@ public class WheelOfFortune {
       System.out.println("                       =  Wheel of Fortune  =");
       System.out.println("                       ======================");
       
-      System.out.println(questions.get(0));
+      
       
       System.out.println("1: Spin the wheel");
       System.out.println("2: Buy a vowel");
