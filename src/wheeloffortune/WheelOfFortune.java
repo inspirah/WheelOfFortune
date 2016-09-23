@@ -6,10 +6,7 @@
 * ID: azh5318
 */
 package wheeloffortune;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class WheelOfFortune {
     private final static String spin = ("Spin the wheel");
@@ -17,6 +14,12 @@ public class WheelOfFortune {
     private final static String solve = ("Solve the puzzle");
     private final static String quit = ("Quit");
     private final static String test = ("Test letter input");
+    private static final List<String> questions = Arrays.asList
+        (
+            "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
+            "SOME OTHER STUFF"
+        );
+    
     private static final List<String> wheelWedges = Arrays.asList
         (
             "$5000","$600","$500","$300","$500","$800","$550",
@@ -29,30 +32,29 @@ public class WheelOfFortune {
   /**
    * @param args the command line arguments
    */
-  public static void main(String[] args) {
-      displayLogo();
+  public static void main(String[] args) 
+  {
+      displayMenu();
       playGame();}
       //System.out.println(wheelWedges);
-  public static void menu(){
-      System.out.println("1: Spin the wheel");
-      System.out.println("2: Buy a vowel");
-      System.out.println("3: Solve the puzzle");
-      System.out.println("4: Quit");
-      System.out.println("9: Test letter input");
-      System.out.println("Enter a choice:");
-  }
   public static void playGame(){
-      while(true){
-      menu();
+      while(true)
+      {
+      try{
+      displayMenu();
       Random random = new Random();
       String userLetter;
       Scanner in = new Scanner(System.in);
       String input = in.nextLine();
       int value = Integer.valueOf(input);
-      switch(value){
+      
+      switch(value)
+      {
           case 1: input = spin;          
             System.out.println("You've chosen " + spin);
             System.out.println("You landed on: " + wheelWedges.get(random.nextInt(wheelWedges.size())));
+            System.out.println("Please enter a letter");
+            userLetter = in.next().toUpperCase();
             break;
           case 2: input = buy;
             System.out.println("You've chosen " + buy);
@@ -76,14 +78,36 @@ public class WheelOfFortune {
                 userLetter = in.next().toUpperCase();
                 }while(!userLetter.matches("[a-zA-Z]"));
                 System.out.println("You've entered: " + userLetter);
-            }}
-      } 
+            }
+          
+      }}
+      catch(NumberFormatException e)
+          {
+              System.out.println("Please enter a number");
+          }
+          
+      }
   }
-  public static void displayLogo()
+  public static void displayMenu()
   {
       System.out.println("                       ======================");
       System.out.println("                       =  Wheel of Fortune  =");
       System.out.println("                       ======================");
+      
+      System.out.println(questions.get(0));
+      
+      System.out.println("1: Spin the wheel");
+      System.out.println("2: Buy a vowel");
+      System.out.println("3: Solve the puzzle");
+      System.out.println("4: Quit");
+      System.out.println("9: Test letter input");
+      System.out.println("Enter a choice:");
+  }
+  public static String revealLetter(String userLetter)
+  {
+      userLetter = "213";
+      return userLetter;
+      
   }
 }
     
