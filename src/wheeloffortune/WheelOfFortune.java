@@ -11,11 +11,15 @@ import java.util.*;
 
 public class WheelOfFortune {
 
-    private final static String spin = ("Spin the wheel");
-    private final static String buy = ("Buy a vowel");
-    private final static String solve = ("Solve the puzzle");
-    private final static String quit = ("Quit");
-    private final static String test = ("Test letter input");
+    private final static String SPIN = ("Spin the wheel");
+    private final static String BUY = ("Buy a vowel");
+    private final static String SOLVE = ("Solve the puzzle");
+    private final static String QUIT = ("Quit");
+    private final static String TEST = ("Test letter input");
+    private final static String TOGGLE = ("Toggle");
+    private static String userEntry = "";
+    private static String unmaskedAns = "";
+    private static String answer ="THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
     private static final Scanner input = new Scanner(System.in);
     private static final Random ran_num = new Random();
     private static final List<String> questions = Arrays.asList
@@ -33,14 +37,14 @@ public class WheelOfFortune {
         );
     private static final List<String> _menuChoices = Arrays.asList
         (
-            "1. Spin the wheel",
+            "\n1. Spin the wheel",
             "2. Buy a vowel",
             "3. Solve the puzzle",
             "4. Quit the game",
             "", // 5
             "", // 6
             "", // 7
-            "", // 8
+            "8. Toggle",
             "9. Test letter input"
         );
 
@@ -62,6 +66,7 @@ public class WheelOfFortune {
             try 
             {
                 displayLogo();
+                mask();
                 for (String menuChoice : _menuChoices) 
                 {
                     if (!menuChoice.equals("")) 
@@ -75,31 +80,39 @@ public class WheelOfFortune {
                 switch (caseValue) 
                 {
                     case 1:
-                        userInput = spin;
-                        System.out.println("You've chosen " + spin);
+                        userInput = SPIN;
+                        System.out.println("You've chosen " + SPIN);
                         System.out.println("You landed on: " + wheelWedges.get(ran_num.nextInt(wheelWedges.size())));
-                        System.out.println("You've entered:" + revealLetter());
+                        revealLetter();
+                        
                         break;
 
                     case 2:
-                        userInput = buy;
-                        System.out.println("You've chosen " + buy);
+                        userInput = BUY;
+                        System.out.println("You've chosen " + BUY);
                         break;
 
                     case 3:
-                        userInput = solve;
-                        System.out.println("You've chosen " + solve);
+                        userInput = SOLVE;
+                        System.out.println("You've chosen " + SOLVE);
                         break;
 
                     case 4:
-                        userInput = quit;
-                        System.out.println("You've chosen " + quit);
+                        userInput = QUIT;
+                        System.out.println("You've chosen " + QUIT);
                         System.exit(0);
+                        
+                    case 8:
+                        userInput = TOGGLE;
+                        System.out.println("You've chosen " + TOGGLE);
+                        unmask();
+                        break;
 
                     case 9:
-                        userInput = test;
-                        System.out.println("You've chosen " + test);
+                        userInput = TEST;
+                        System.out.println("You've chosen " + TEST);
                         System.out.println("You've entered: " + inputLetter());
+                        break;
                 }
             } 
             catch (NumberFormatException NumFormExcept) 
@@ -112,12 +125,49 @@ public class WheelOfFortune {
 
     public static void displayLogo() 
     {
+        System.out.println("");
         System.out.println("                       ======================");
         System.out.println("                       =  Wheel of Fortune  =");
         System.out.println("                       ======================");
-        System.out.println(questions.get(0).replaceAll("[a-zA-Z]","_ "));
     }
-
+    public static void unmask()
+    {
+        for (char letter : answer.toCharArray())
+        {
+            if (userEntry.indexOf(letter)!= -1)
+            {
+                if (letter >= 'A' && letter <= 'Z')
+                {
+                    System.out.print(letter);
+                }
+                else
+                {
+                    System.out.print("  ");
+                }
+            }
+        }
+    }
+    public static void mask ()
+    {
+        for (char letter : answer.toCharArray())
+        {
+            if (userEntry.indexOf(letter)==-1)
+            {
+                if (letter >= 'A' && letter <= 'Z')
+                {
+                    System.out.print("_ ");
+                }
+                else
+                {
+                    System.out.print("  ");
+                }
+            }
+            else
+            {
+                System.out.print(letter);
+            }
+        }
+    }
     private static char inputLetter() 
     {
         char letter = ' ';
@@ -125,8 +175,7 @@ public class WheelOfFortune {
 
         while (!finished) {
             System.out.print("Enter a letter: ");
-
-            String line = input.nextLine();
+            String line = input.nextLine().toUpperCase();
             if (line.length() != 1) {
                 System.out.println("Enter just one letter");
             } else {
@@ -141,14 +190,25 @@ public class WheelOfFortune {
         return letter;
     }
 
-    private static String revealLetter() 
+    private static char revealLetter() 
     {
-        System.out.println("Tryme");
-        String line = input.nextLine();
-        String letter = "";
-        if (line.matches("[a-z]"))
-        {
-            letter = questions.get(0).replace("_", "[a-zA-Z]");
+        char letter = ' ';
+        boolean finished = false;
+
+        while (!finished) {
+            System.out.print("Enter a letter: ");
+            String line = input.nextLine().toUpperCase();
+            if (line.length() != 1) {
+                System.out.println("Enter just one letter");
+            } else {
+                letter = line.charAt(0);
+                userEntry += line;
+                if (!Character.isLetter(letter)) {
+                    System.out.println("That is not a letter");
+                } else {
+                    finished = true;
+                }
+            }
         }
         return letter;
     }
