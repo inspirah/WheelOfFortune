@@ -75,7 +75,6 @@ public class WheelOfFortune {
                         System.out.println("You've chosen " + SPIN);
                         System.out.println("You landed on: " + wheelWedges.get(ran_num.nextInt(wheelWedges.size())));//uses ran_num from random class to generate random int from the array list wheelWedges.
                         revealLetter();
-
                         break;
 
                     case 2:
@@ -108,7 +107,6 @@ public class WheelOfFortune {
             } catch (NumberFormatException NumFormExcept) {
                 System.out.println("Please enter a number");
             }
-
         }
     }
 
@@ -119,7 +117,7 @@ public class WheelOfFortune {
         System.out.println("                       ======================");
     }
 
-    public static void unmask()//Here I try to create the toggling effect.
+    public static void unmask()//Here I try to create the toggling effect by updating the userEntry variable.
     {
         for (char letter : phrase.toCharArray()) {
             if (userEntry.indexOf(letter) != -1) {
@@ -141,10 +139,10 @@ public class WheelOfFortune {
                 if (letter >= 'A' && letter <= 'Z') {
                     System.out.print("_ ");
                 } else {
-                    System.out.print("  ");
+                    System.out.print("  ");//creates the spacing between the words
                 }
             } else {
-                System.out.print(letter);
+                System.out.print(letter);//prints letter to replace the underscore.
             }
         }
     }
