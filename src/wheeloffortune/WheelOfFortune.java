@@ -10,184 +10,275 @@ package wheeloffortune;
 import java.util.*;
 
 public class WheelOfFortune {
-//This is where I declare most of my finals and variables.
 
-    private final static String SPIN = ("Spin the wheel");
-    private final static String BUY = ("Buy a vowel");
-    private final static String SOLVE = ("Solve the puzzle");
-    private final static String QUIT = ("Quit");
-    private final static String TEST = ("Test letter input");
-    private final static String TOGGLE = ("Toggle");
-    private static String userEntry = "";//global variable that is updated and used to display a letter that a user entered.
-    private static String unmaskedAns = "";
-    private static final String phrase = "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG";
-    private static final Scanner input = new Scanner(System.in);
-    private static final Random ran_num = new Random();
-    private static final List<String> questions = Arrays.asList(
-            "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
-            "SOME OTHER STUFF"
-    );
+  // To read from the keyboard
+  private static final Scanner _keyboard = new Scanner(System.in);
 
-    private static final List<String> wheelWedges = Arrays.asList(
-            "$5000", "$600", "$500", "$300", "$500", "$800", "$550",
-            "$400", "$300", "$900", "$500", "$300", "$900", "$BANKRUPT",
-            "$600", "$400", "$300", "LOSE A TURN", "$800", "$350", "$450",
-            "$700", "$300", "$600"
-    );
-    private static final List<String> _menuChoices = Arrays.asList(
-            "\n1. Spin the wheel",
-            "2. Buy a vowel",
-            "3. Solve the puzzle",
-            "4. Quit the game",
-            "", // 5
-            "", // 6
-            "", // 7
-            "8. Toggle",
-            "9. Test letter input"
-    );
+  // Used to get random values for puzzle and wheel
+  private static final Random _random = new Random();
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        playGame();
+  // True if we want to show all letters
+  private static boolean revealLetters = false;
+  
+  //Variable to get the winnings amount a user has spun
+  private static int winnings = 0;
+
+  /*
+  * These are the wedges that are part of the wheel.
+  * There are 24.  Some values can appear more than once
+  */
+  private static final List<String> _wedges = Arrays.asList(
+      /* 01 */"$5000",
+      /* 02 */ "$600",
+      /* 03 */ "$500",
+      /* 04 */ "$300",
+      /* 05 */ "$500",
+      /* 06 */ "$800",
+      /* 07 */ "$550",
+      /* 08 */ "$400",
+      /* 09 */ "$300",
+      /* 10 */ "$900",
+      /* 11 */ "$500",
+      /* 12 */ "$300",
+      /* 13 */ "$900",
+      /* 14 */ "BANKRUPT",
+      /* 15 */ "$600",
+      /* 16 */ "$400",
+      /* 17 */ "$300",
+      /* 18 */ "LOSE A TURN",
+      /* 19 */ "$800",
+      /* 20 */ "$350",
+      /* 21 */ "$450",
+      /* 22 */ "$700",
+      /* 23 */ "$300",
+      /* 24 */ "$600"
+  );
+
+  /*
+  * The number of wedges will not change throughout the game
+  * We can cache the value so we're not calling .size() over and over
+  */
+  private static final int _wedgeCount = _wedges.size();
+
+  private static String chooseRandomWedgeValue() {
+    // Choose a random index
+    int randomWedgeIndex = _random.nextInt(_wedgeCount);
+    
+    //This converts the strings in the array to an int and replaces the $ sign to empty, 
+    //so that the values obtained from the strings will be stored into winnings.
+    //The if else if statements will compute wether the random index shows up as LOSE A TURN
+    //or BANKRUPT and either do nothing or set the winnings to 0
+    if(_wedges.get(randomWedgeIndex)!= "LOSE A TURN" && _wedges.get(randomWedgeIndex) != "BANKRUPT"){
+    winnings += Integer.parseInt(_wedges.get(randomWedgeIndex).replace("$", ""));
     }
-
-    public static void playGame() {
-        while (true) //left as true because the user will only be able to exit the program by menu choice # 4.
-        {
-            try //try catch statement to make sure the user enters nothing else but a number choice from the menu.
-            {
-                displayLogo();
-                mask();
-                for (String menuChoice : _menuChoices) //iterates through _menuChoices in the form of the key menuChoice
-                {
-                    if (!menuChoice.equals("")) {
-                        System.out.println(menuChoice);
-                    }
-                }
-                System.out.println("Enter a choice: ");
-                String userInput = input.nextLine();
-                int caseValue = Integer.valueOf(userInput);//declared caseValue integer to the integer value of the userInput so that the switch case can be used.
-                switch (caseValue) {
-                    case 1:
-                        userInput = SPIN;
-                        System.out.println("You've chosen " + SPIN);
-                        System.out.println("You landed on: " + wheelWedges.get(ran_num.nextInt(wheelWedges.size())));//uses ran_num from random class to generate random int from the array list wheelWedges.
-                        revealLetter();
-                        break;
-
-                    case 2:
-                        userInput = BUY;
-                        System.out.println("You've chosen " + BUY);
-                        break;
-
-                    case 3:
-                        userInput = SOLVE;
-                        System.out.println("You've chosen " + SOLVE);
-                        break;
-
-                    case 4:
-                        userInput = QUIT;
-                        System.out.println("You've chosen " + QUIT);
-                        System.exit(0);
-
-                    case 8:
-                        userInput = TOGGLE;
-                        System.out.println("You've chosen " + TOGGLE);
-                        unmask();
-                        break;
-
-                    case 9:
-                        userInput = TEST;
-                        System.out.println("You've chosen " + TEST);
-                        System.out.println("You've entered: " + inputLetter());
-                        break;
-                }
-            } catch (NumberFormatException NumFormExcept) {
-                System.out.println("Please enter a number");
-            }
-        }
-    }
-
-    public static void displayLogo() {
-        System.out.println("");
-        System.out.println("                       ======================");
-        System.out.println("                       =  Wheel of Fortune  =");
-        System.out.println("                       ======================");
-    }
-
-    public static void unmask()//Here I try to create the toggling effect by updating the userEntry variable.
+    else if (_wedges.get(randomWedgeIndex) == "BANKRUPT")
     {
-        for (char letter : phrase.toCharArray()) {
-            if (userEntry.indexOf(letter) != -1) {
-                if (letter >= 'A' && letter <= 'Z') {
-                    userEntry = phrase + " ";
-                    //System.out.print(letter);
-                } else {
-                    System.out.print("  ");
-                }
-            }
-        }
+        winnings = 0;
     }
 
-    public static void mask()//Hides characters from the answer string that was converted to a CharArray
-    {
-        for (char letter : phrase.toCharArray())//This is saying for a character 'Letter' in the converted CharArray, 'answer' if the global variable userEntry
-        {
-            if (userEntry.indexOf(letter) == -1) {
-                if (letter >= 'A' && letter <= 'Z') {
-                    System.out.print("_ ");
-                } else {
-                    System.out.print("  ");//creates the spacing between the words
-                }
-            } else {
-                System.out.print(letter);//prints letter to replace the underscore.
-            }
-        }
+    // Return the corresponding wedge
+    return _wedges.get(randomWedgeIndex);
+  }
+
+  // The menu choices
+  private static final List<String> _menuChoices = Arrays.asList(
+      "1. Spin the wheel",
+      "2. Buy a vowel",
+      "3. Solve the puzzle",
+      "4. Quit the game",
+      "", // 5 possibly used in the future
+      "", // 6 possibly used in the future
+      "", // 7 possibly used in the future
+      "8. Toggle puzzle reveal",
+      "9. Test letter input"
+  );
+  private static final int _quitChoiceNumber = 4;
+
+  // The different puzzles to choose from
+  private static final List<String> _puzzles = Arrays.asList(
+      "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
+      "PENN STATE ABINGTON",
+      "INFORMATION SCIENCES AND TECHNOLOGY"
+  );
+
+  /*
+  * The number of puzzles will not change throughout the game
+  * We can cache the value so we're not calling .size() over and over
+  */
+  private static final int _puzzlesCount = _puzzles.size();
+
+  /*
+  * We will store the guessed letters in a hash map.
+  * The "key" will be the character that was guessed
+  * The "value" will be true/false
+  *
+  * Actually, the "value" aspect of this is not relevant.
+  * Just the fact that a letter appears in the map as a key, is enough to imply
+  * it was guessed.
+  */
+  private static Map<Character, Boolean> guessedLetters = new HashMap<>();
+
+  /*
+  * Given a puzzle, return a masked version, with hidden letters
+  */
+  private static String maskPuzzle(String puzzle, boolean revealLetters) {
+    // Use a string builder, since Java strings are immutable
+    StringBuilder maskedPuzzle = new StringBuilder();
+
+    // For each letter in the puzzle
+    for (int i = 0; i < puzzle.length(); i++) {
+      // Current letter
+      char c = puzzle.charAt(i);
+
+      /*
+      * Either we're revealing all letters, or we've already guessed the
+      * letter
+      */
+      boolean isLetterGuessed = revealLetters || guessedLetters.containsKey(c);
+
+      /*
+      * If the letter is not blank (we don't mask blanks), and the letter
+      * has not been guessed, then we will mask it.
+      */
+      if (c != ' ' && !isLetterGuessed){
+        c = '_';
+      }
+      
+      // Put one space after each character (even a space) in the puzzle
+      maskedPuzzle.append(c + " ");
     }
 
-    private static char inputLetter() {
-        char letter = ' ';
-        boolean finished = false;//boolean value for while loop
+    // Convert the string builder to a string and return it
+    return maskedPuzzle.toString();
+  }
 
-        while (!finished) {
-            System.out.print("Enter a letter: ");
-            String line = input.nextLine().toUpperCase();
-            if (line.length() != 1) {
-                System.out.println("Enter just one letter");
-            } else {
-                letter = line.charAt(0);
-                if (!Character.isLetter(letter)) {
-                    System.out.println("That is not a letter");
-                } else {
-                    finished = true;
-                }
-            }
-        }
-        return letter;
+  // Choose a random puzzle
+  private static String chooseRandomPuzzle() {
+    // Choose a random puzzle index
+    int randomPuzzleIndex = _random.nextInt(_puzzlesCount);
+
+    //Return the corresponding puzzle
+    return _puzzles.get(randomPuzzleIndex);
+  }
+
+  // Determine if the given number choice actually appears on the menu
+  private static boolean isValidMenuChoice(int choice) {
+    if ((choice < 1) || (choice > _menuChoices.size())) {
+      return false;
     }
 
-    private static char revealLetter()//modified inputLetter() method that allows me to add a character to the global variable userEntry to reveal letters.
-    {
-        char letter = ' ';
-        boolean finished = false;
+    // Subtrace 1 because arrays/lists are zero-based
+    int index = choice - 1;
+    String menuText = _menuChoices.get(index);
 
-        while (!finished) {
-            System.out.print("Enter a letter: ");
-            String line = input.nextLine().toUpperCase();
-            if (line.length() != 1) {
-                System.out.println("Enter just one letter");
-            } else {
-                letter = line.charAt(0);
-                userEntry += line;//global variable updated to add the input from user 'line' to userEntry to allow me to display that letter in the masking method
-                if (!Character.isLetter(letter)) {
-                    System.out.println("That is not a letter");
-                } else {
-                    finished = true;
-                }
-            }
+    return !menuText.equals("");
+  }
+
+  // Input a letter from the keyboard
+  private static char inputLetter() {
+    char letter = ' ';
+    boolean finished = false;
+
+    while (!finished) {
+      System.out.print("Enter a letter: ");
+
+      String line = _keyboard.nextLine();
+      if (line.length() != 1) {
+        System.out.println("Enter just one letter");
+      } else {
+        // Convert letter to upper case
+        letter = Character.toUpperCase(line.charAt(0));
+        if (!Character.isLetter(letter)) {
+          System.out.println("That is not a letter");
+        } else {
+          // Will exit the loop
+          finished = true;
         }
-        return letter;
+      }
     }
+
+    return letter;
+  }
+
+  // Display the game menu, and handle the choices made
+  private static void gameMenu() {
+    // Choice from the menu
+    int choice = 0;
+
+    // Line entered from keyboard
+    String line = "";
+
+    // True when user wants to quit
+    boolean quit = false;
+
+    // Choose one of the puzzles at random
+    String puzzle = chooseRandomPuzzle();
+
+    // Repeat the menu until the user chooses to quit
+    while (!quit) {
+      System.out.println("                      ======================");
+      System.out.println("                      =  Wheel Of Fortune  =");
+      System.out.println("                      ======================");
+      System.out.println("                                            ");
+
+      System.out.println(maskPuzzle(puzzle, revealLetters));
+      System.out.println();
+
+      // Loop over the menu choices, and display each one
+      for (String menuChoice : _menuChoices) {
+        // Skip blank place-holder choices
+        if (!menuChoice.equals("")) {
+          System.out.println(menuChoice);
+        }
+      }
+      System.out.print("Enter choice: ");
+      line = _keyboard.nextLine();
+      try {
+        // If the input was not an integer, then that error will be caught
+        choice = Integer.parseInt(line);
+      } catch (NumberFormatException nfe) {
+        // Error message, then go to the top of the loop
+        System.out.println("Invalid input");
+        continue;
+      }
+
+      // If not valid, then go back to the top of the loop
+      if (!isValidMenuChoice(choice)) {
+        System.out.println("Not a menu choice");
+        continue;
+      }
+
+      System.out.println("You chose: " + _menuChoices.get(choice - 1));
+      switch (choice) {
+        case _quitChoiceNumber:
+          // This will allow us to leave the menu loop
+          quit = true;
+          break;
+
+        case 1: // Spin the wheel
+          System.out.println("You landed on: " + chooseRandomWedgeValue());
+          System.out.println(winnings);
+          char letter = inputLetter();
+          System.out.println("Your letter is: " + letter);
+          guessedLetters.put(letter, true);
+          break;
+
+        case 8: // Toggle reveal letters
+          revealLetters = !revealLetters;
+          break;
+
+        case 9: // Test to read in a letter from the keyboard
+          System.out.println("Your letter is: " + inputLetter());
+          break;
+      }
+    }
+  }
+
+  /**
+   * @param args the command line arguments
+   */
+  public static void main(String[] args) {
+    gameMenu();
+  }
+
 }
