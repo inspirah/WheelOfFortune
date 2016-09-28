@@ -20,7 +20,7 @@ public class WheelOfFortune {
   // True if we want to show all letters
   private static boolean revealLetters = false;
   
-  //Variable to get the winnings amount a user has spun
+  //Variable set to 0 for use when needed to get the winnings amount a user has spun
   private static int winnings = 0;
 
   /*
