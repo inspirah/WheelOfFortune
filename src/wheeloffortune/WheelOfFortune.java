@@ -257,7 +257,7 @@ public class WheelOfFortune {
 
         case 1: // Spin the wheel
           System.out.println("You landed on: " + chooseRandomWedgeValue());
-          System.out.println(winnings);
+          System.out.println("Total: $" + winnings);
           char letter = inputLetter();
           System.out.println("Your letter is: " + letter);
           guessedLetters.put(letter, true);
